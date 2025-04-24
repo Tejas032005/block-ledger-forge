@@ -2,6 +2,12 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ShoppingCart, Calendar, User, Menu as MenuIcon } from 'lucide-react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const Dashboard = () => {
   return (
@@ -61,22 +67,38 @@ const Dashboard = () => {
             <CardDescription>Latest customer orders</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[1, 2, 3, 4, 5].map((order) => (
-                <div key={order} className="flex items-center justify-between border-b pb-2">
-                  <div>
-                    <p className="font-medium">Order #{1000 + order}</p>
-                    <p className="text-sm text-muted-foreground">Table 5 • 3 items • $42.80</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                      Completed
-                    </span>
-                    <p className="text-xs text-muted-foreground mt-1">5 min ago</p>
-                  </div>
-                </div>
+            <Accordion type="single" collapsible className="w-full">
+              {[
+                { id: 1005, customer: "Ankit Sharma", table: 5, items: 3, amount: 842.80, status: "Completed", time: "5 min ago" },
+                { id: 1004, customer: "Shivam Kumar", table: 3, items: 2, amount: 649.00, status: "Preparing", time: "15 min ago" },
+                { id: 1003, customer: "Nidhi Singh", table: 7, items: 4, amount: 1242.50, status: "Completed", time: "25 min ago" },
+                { id: 1002, customer: "Honey Chaudhary", table: 2, items: 2, amount: 498.00, status: "Delivered", time: "35 min ago" },
+                { id: 1001, customer: "Megha Anant", table: 6, items: 3, amount: 742.80, status: "Completed", time: "45 min ago" },
+              ].map((order, index) => (
+                <AccordionItem key={order.id} value={`order-${order.id}`}>
+                  <AccordionTrigger className="hover:no-underline">
+                    <div className="flex justify-between w-full pr-4">
+                      <span>Order #{order.id}</span>
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+                        ${order.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                          order.status === 'Preparing' ? 'bg-blue-100 text-blue-800' :
+                          'bg-purple-100 text-purple-800'}`}>
+                        {order.status}
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-2 pl-4 text-sm">
+                      <p><span className="font-medium">Customer:</span> {order.customer}</p>
+                      <p><span className="font-medium">Table:</span> {order.table}</p>
+                      <p><span className="font-medium">Items:</span> {order.items}</p>
+                      <p><span className="font-medium">Amount:</span> ₹{order.amount}</p>
+                      <p className="text-muted-foreground">{order.time}</p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
               ))}
-            </div>
+            </Accordion>
           </CardContent>
         </Card>
         
@@ -86,29 +108,33 @@ const Dashboard = () => {
             <CardDescription>Next reservations today</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <Accordion type="single" collapsible className="w-full">
               {[
-                { time: "12:30 PM", name: "John Smith", guests: 2, table: 7 },
-                { time: "1:00 PM", name: "Emily Johnson", guests: 4, table: 12 },
-                { time: "1:30 PM", name: "Michael Brown", guests: 6, table: 15 },
-                { time: "2:00 PM", name: "Sophia Garcia", guests: 2, table: 3 },
-                { time: "5:30 PM", name: "David Wilson", guests: 5, table: 9 },
-              ].map((reservation, i) => (
-                <div key={i} className="flex items-center justify-between border-b pb-2">
-                  <div>
-                    <p className="font-medium">{reservation.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {reservation.guests} guests • Table {reservation.table}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-                      {reservation.time}
-                    </span>
-                  </div>
-                </div>
+                { time: "12:30 PM", name: "Rajdeep Singh", guests: 4, table: 7 },
+                { time: "1:00 PM", name: "Vaishnavi Patel", guests: 2, table: 12 },
+                { time: "1:30 PM", name: "Ambika Sharma", guests: 6, table: 15 },
+                { time: "2:00 PM", name: "Honey Chaudhary", guests: 3, table: 3 },
+                { time: "5:30 PM", name: "Shivam Kumar", guests: 5, table: 9 },
+              ].map((reservation, index) => (
+                <AccordionItem key={index} value={`reservation-${index}`}>
+                  <AccordionTrigger className="hover:no-underline">
+                    <div className="flex justify-between w-full pr-4">
+                      <span>{reservation.name}</span>
+                      <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                        {reservation.time}
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-2 pl-4 text-sm">
+                      <p><span className="font-medium">Guests:</span> {reservation.guests}</p>
+                      <p><span className="font-medium">Table:</span> {reservation.table}</p>
+                      <p><span className="font-medium">Time:</span> {reservation.time}</p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
               ))}
-            </div>
+            </Accordion>
           </CardContent>
         </Card>
       </div>

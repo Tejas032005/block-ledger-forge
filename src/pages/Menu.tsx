@@ -1,10 +1,16 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { IndianRupee } from 'lucide-react';
+import { IndianRupee, ShoppingCart } from 'lucide-react';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const menuCategories = [
   "Starters",
@@ -22,7 +28,7 @@ const menuItems = [
     description: "Marinated cottage cheese cubes grilled to perfection with Indian spices",
     price: 299,
     category: "Starters",
-    image: "https://placehold.co/300x200",
+    image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800&auto=format&fit=crop",
     available: true,
     dietary: ["vegetarian"]
   },
@@ -32,7 +38,7 @@ const menuItems = [
     description: "Tender chicken pieces in rich tomato and butter gravy",
     price: 399,
     category: "Main Course",
-    image: "https://placehold.co/300x200",
+    image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=800&auto=format&fit=crop",
     available: true,
     dietary: []
   },
@@ -117,9 +123,37 @@ const Menu = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-display font-bold text-orange-600">Our Menu</h1>
-        <Button variant="outline" className="flex items-center gap-2">
-          Cart ({totalItems}) <IndianRupee className="h-4 w-4" />{totalAmount}
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="flex items-center gap-2">
+              <ShoppingCart className="h-4 w-4" />
+              Cart ({totalItems}) <IndianRupee className="h-4 w-4" />{totalAmount}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-80" align="end">
+            <DropdownMenuGroup>
+              {cart.map((item) => (
+                <DropdownMenuItem key={item.id} className="flex justify-between p-2">
+                  <span>{item.quantity}x {item.name}</span>
+                  <span className="flex items-center">
+                    <IndianRupee className="h-3 w-3" />
+                    {item.price * item.quantity}
+                  </span>
+                </DropdownMenuItem>
+              ))}
+              {cart.length === 0 && (
+                <DropdownMenuItem disabled>Cart is empty</DropdownMenuItem>
+              )}
+              {cart.length > 0 && (
+                <DropdownMenuItem className="font-bold border-t">
+                  <span className="flex justify-between w-full">
+                    Total: <span className="flex items-center"><IndianRupee className="h-3 w-3" />{totalAmount}</span>
+                  </span>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       
       <Tabs defaultValue={activeCategory} onValueChange={setActiveCategory} className="w-full">
@@ -141,7 +175,11 @@ const Menu = () => {
               {filteredItems.map(item => (
                 <Card key={item.id} className="overflow-hidden border-orange-100 hover:border-orange-200 transition-colors">
                   <div className="h-48 overflow-hidden">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <img 
+                      src={item.image} 
+                      alt={item.name} 
+                      className="w-full h-full object-cover transition-transform hover:scale-105"
+                    />
                   </div>
                   <CardHeader>
                     <div className="flex justify-between items-start">
@@ -181,4 +219,3 @@ const Menu = () => {
 };
 
 export default Menu;
-
